@@ -6,7 +6,7 @@ files:
   - "package.json"
   - from: "dist"
     to: "."
-    filter: ["main.js", "preload.js"]
+    filter: ["main.js"]
   - from: "../renderer/dist"
     to: "."
 extraMetadata:
@@ -24,7 +24,7 @@ linux:
 mac:
   target:
     target: 'default'
-    arch: 'universal'
+    arch: ['universal', 'arm64']
 appImage:
   executableArgs:
   - "--sandbox"
