@@ -109,7 +109,7 @@ async function loadStats (language: string) {
   const indexRef = new Uint32Array(await (await fetch(`${import.meta.env.BASE_URL}data/${language}/stats-ref.index.bin`)).arrayBuffer())
   const indexMatcher = new Uint32Array(await (await fetch(`${import.meta.env.BASE_URL}data/${language}/stats-matcher.index.bin`)).arrayBuffer())
 
-  STAT_BY_REF = function (ref: string) {
+  STAT_BY_REF = function (ref: string) {    
     let start = dataBinarySearch(indexRef, Number(fnv1a(ref, { size: 32 })), 0, INDEX_WIDTH)
     if (start === -1) return undefined
     start = indexRef[start * INDEX_WIDTH + 1]

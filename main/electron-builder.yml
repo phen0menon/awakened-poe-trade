@@ -18,6 +18,10 @@ win:
   target:
   - "nsis"
   - "portable"
+mac:
+  target:
+    target: 'default'
+    arch: ['universal', 'arm64']
 linux:
   target:
   - "AppImage"

@@ -88,8 +88,8 @@ export class Shortcuts {
     this.clipboard.updateOptions(restoreClipboard)
     this.ocrWorker.updateOptions(language)
 
-    const copyItemShortcut = mergeTwoHotkeys('Ctrl + C', this.gameConfig.showModsKey)
-    if (copyItemShortcut !== 'Ctrl + C') {
+    const copyItemShortcut = mergeTwoHotkeys('Meta + C', this.gameConfig.showModsKey)
+    if (copyItemShortcut !== 'Meta + C') {
       actions.push({
         shortcut: copyItemShortcut,
         action: { type: 'test-only' }
@@ -97,9 +97,9 @@ export class Shortcuts {
     }
 
     const allShortcuts = new Set([
-      'Ctrl + C', 'Ctrl + V', 'Ctrl + A',
-      'Ctrl + F',
-      'Ctrl + Enter',
+      'Meta + C', 'Meta + V', 'Meta + A',
+      'Meta + F',
+      'Meta + Enter',
       'Home', 'Delete', 'Enter',
       'ArrowUp', 'ArrowRight', 'ArrowLeft',
       copyItemShortcut
@@ -209,7 +209,7 @@ export class Shortcuts {
 }
 
 function pressKeysToCopyItemText (pressedModKeys: string[] = [], showModsKey: string) {
-  let keys = mergeTwoHotkeys('Ctrl + C', showModsKey).split(' + ')
+  let keys = mergeTwoHotkeys('Meta + C', showModsKey).split(' + ')
   keys = keys.filter(key => key !== 'C' && !pressedModKeys.includes(key))
 
   for (const key of keys) {
