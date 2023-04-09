@@ -31,7 +31,7 @@ export class HttpProxy {
             return {
               ...headers,
               cookie,
-              'user-agent': app.userAgentFallback
+              'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko)'
             }
           }
         }
