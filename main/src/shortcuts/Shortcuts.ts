@@ -172,24 +172,24 @@ export class Shortcuts {
         } else if (entry.action.type === 'ocr-text' && entry.action.target === 'heist-gems') {
           if (process.platform !== 'win32') return
 
-          const { action } = entry
-          const pressTime = Date.now()
-          const imageData = this.poeWindow.screenshot()
-          this.ocrWorker.findHeistGems({
-            width: this.poeWindow.bounds.width,
-            height: this.poeWindow.bounds.height,
-            data: imageData
-          }).then(result => {
-            this.server.sendEventTo('last-active', {
-              name: 'MAIN->CLIENT::ocr-text',
-              payload: {
-                target: action.target,
-                pressTime,
-                ocrTime: result.elapsed,
-                paragraphs: result.recognized.map(p => p.text)
-              }
-            })
-          }).catch(() => {})
+          // const { action } = entry
+          // const pressTime = Date.now()
+          // const imageData = this.poeWindow.screenshot()
+          // this.ocrWorker.findHeistGems({
+          //   width: this.poeWindow.bounds.width,
+          //   height: this.poeWindow.bounds.height,
+          //   data: imageData
+          // }).then(result => {
+          //   this.server.sendEventTo('last-active', {
+          //     name: 'MAIN->CLIENT::ocr-text',
+          //     payload: {
+          //       target: action.target,
+          //       pressTime,
+          //       ocrTime: result.elapsed,
+          //       paragraphs: result.recognized.map(p => p.text)
+          //     }
+          //   })
+          // }).catch(() => {})
         }
       })
 

@@ -34,7 +34,7 @@ export class GameWindow extends EventEmitter {
     if (!this._isTracking) {
       OverlayController.events.on('focus', () => { this.isActive = true })
       OverlayController.events.on('blur', () => { this.isActive = false })
-      OverlayController.attachByTitle(window, title)
+      OverlayController.attachByTitle(window!, title)
       this._isTracking = true
     }
   }
@@ -46,6 +46,6 @@ export class GameWindow extends EventEmitter {
   }
 
   screenshot () {
-    return OverlayController.screenshot()
+    // return OverlayController.screenshot()
   }
 }
