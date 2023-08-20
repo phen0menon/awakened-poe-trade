@@ -1,9 +1,9 @@
 <template>
   <ui-popover :delay="[80, null]" placement="bottom-start" boundary="#price-window">
     <template #target>
-      <button class="text-gray-500 rounded mr-1 px-2 truncate">
+      <button class="rounded mr-1 px-2 truncate" :class="showWarning() ? 'text-orange-500' : 'text-gray-500'">
         <span><i class="fas fa-history"></i> {{ t(filters.trade.offline ? 'Offline' : 'Online') }}</span>
-        <span v-if="showLeagueName">, {{ filters.trade.league }}</span>
+        <span v-if="showLeagueName()">, {{ filters.trade.league }}</span>
       </button>
     </template>
     <template #content>
@@ -12,29 +12,29 @@
           <div class="mb-1">
             <ui-toggle
               :modelValue="filters.trade.offline"
-              @update:modelValue="onOfflineUpdate">{{ t('Offline & Online') }}</ui-toggle>
+              @update:modelValue="onOfflineUpdate">{{ t(':offline_toggle') }}</ui-toggle>
           </div>
           <template v-if="byTime">
-            <ui-radio v-model="filters.trade.listed" :value="undefined">{{ t('Listed: Any Time') }}</ui-radio>
-            <ui-radio v-model="filters.trade.listed" value="1day">{{ t('1 Day Ago') }}</ui-radio>
-            <ui-radio v-model="filters.trade.listed" value="3days">{{ t('3 Days Ago') }}</ui-radio>
-            <ui-radio v-model="filters.trade.listed" value="1week">{{ t('1 Week Ago') }}</ui-radio>
-            <ui-radio v-model="filters.trade.listed" value="2weeks">{{ t('2 Weeks Ago') }}</ui-radio>
-            <ui-radio v-model="filters.trade.listed" value="1month">{{ t('1 Month Ago') }}</ui-radio>
-            <ui-radio v-model="filters.trade.listed" value="2months">{{ t('2 Months Ago') }}</ui-radio>
+            <ui-radio v-model="filters.trade.listed" :value="undefined">{{ t(':listed_any_time') }}</ui-radio>
+            <ui-radio v-model="filters.trade.listed" value="1day">{{ t(':listed_1day') }}</ui-radio>
+            <ui-radio v-model="filters.trade.listed" value="3days">{{ t(':listed_3days') }}</ui-radio>
+            <ui-radio v-model="filters.trade.listed" value="1week">{{ t(':listed_1week') }}</ui-radio>
+            <ui-radio v-model="filters.trade.listed" value="2weeks">{{ t(':listed_2weeks') }}</ui-radio>
+            <ui-radio v-model="filters.trade.listed" value="1month">{{ t(':listed_1month') }}</ui-radio>
+            <ui-radio v-model="filters.trade.listed" value="2months">{{ t(':listed_2months') }}</ui-radio>
           </template>
         </div>
         <div class="flex flex-col gap-y-1">
           <div class="mb-1">
             <ui-toggle :class="{ 'invisible': filters.trade.offline }"
-              v-model="filters.trade.onlineInLeague">{{ t('In League') }}</ui-toggle>
+              v-model="filters.trade.onlineInLeague">{{ t(':in_league_toggle') }}</ui-toggle>
           </div>
           <ui-radio v-for="league of tradeLeagues" :key="league.id"
             v-model="filters.trade.league" :value="league.id">{{ league.id }}</ui-radio>
           <template v-if="byTime">
-            <ui-radio class="mt-3" v-model="filters.trade.currency" :value="undefined">{{ t('Any Currency') }}</ui-radio>
-            <ui-radio v-model="filters.trade.currency" value="chaos">{{ t('Chaos Orb') }}</ui-radio>
-            <ui-radio v-model="filters.trade.currency" value="divine">{{ t('Divine Orb') }}</ui-radio>
+            <ui-radio class="mt-3" v-model="filters.trade.currency" :value="undefined">{{ t(':currency_any') }}</ui-radio>
+            <ui-radio v-model="filters.trade.currency" value="chaos">{{ t(':currency_only_chaos') }}</ui-radio>
+            <ui-radio v-model="filters.trade.currency" value="divine">{{ t(':currency_only_div') }}</ui-radio>
           </template>
         </div>
       </div>
@@ -44,7 +44,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { useI18nNs } from '@/web/i18n'
 import type { ItemFilters } from '../filters/interfaces'
 import { useLeagues } from '@/web/background/Leagues'
 
@@ -61,7 +61,7 @@ export default defineComponent({
   },
   setup (props) {
     const leagues = useLeagues()
-    const { t } = useI18n()
+    const { t } = useI18nNs('online_filter')
 
     return {
       t,
@@ -72,7 +72,12 @@ export default defineComponent({
           return true
         })
       }),
-      showLeagueName: computed(() => leagues.selectedId.value !== props.filters.trade.league),
+      showLeagueName: () => leagues.selectedId.value !== props.filters.trade.league,
+      showWarning: () => Boolean(
+        (props.filters.trade.listed &&
+          ['1day', '3days', '1week'].includes(props.filters.trade.listed)) ||
+        props.filters.trade.currency
+      ),
       onOfflineUpdate (offline: boolean) {
         const { filters } = props
         filters.trade.offline = offline
@@ -84,22 +89,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<i18n>
-{
-  "ru": {
-    "Offline & Online": "Офлайн и Онлайн",
-    "In League": "В лиге",
-    "Listed: Any Time": "Любое время",
-    "1 Day Ago": "До 1-го дня",
-    "3 Days Ago": "До 3-х дней",
-    "1 Week Ago": "До 1-й недели",
-    "2 Weeks Ago": "До 2-х недель",
-    "1 Month Ago": "До 1-го месяца",
-    "2 Months Ago": "До 2-х месяцев",
-    "Any Currency": "Любая валюта",
-    "Chaos Orb": "Сфера хаоса",
-    "Divine Orb": "Божествен. сфера"
-  }
-}
-</i18n>

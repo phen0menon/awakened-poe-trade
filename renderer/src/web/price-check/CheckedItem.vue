@@ -9,7 +9,7 @@
       :item="item"
       :filters="itemFilters" />
     <filters-block
-      ref="filtersBlock"
+      ref="filtersComponent"
       :filters="itemFilters"
       :stats="itemStats"
       :item="item"
@@ -37,7 +37,7 @@
     <stack-value :filters="itemFilters" :item="item"/>
     <div v-if="showSupportLinks" class="mt-auto border border-dashed p-2">
       <div class="mb-1">{{ t('Support development on') }} <a href="https://patreon.com/awakened_poe_trade" class="inline-flex align-middle animate__animated animate__fadeInRight" target="_blank"><img class="inline h-5" src="/images/Patreon.svg"></a></div>
-      <i18n-t keypath="This tool relies on {0} and {1}, consider support them as well" tag="div">
+      <i18n-t keypath="app.thanks_3rd_party" tag="div">
         <a href="https://poeprices.info" target="_blank" class="bg-gray-900 px-1 rounded">poeprices.info</a>
         <a href="https://poe.ninja/support" target="_blank" class="bg-gray-900 px-1 rounded">poe.ninja</a>
       </i18n-t>
@@ -102,22 +102,21 @@ export default defineComponent({
     // TradeListing.vue OR TradeBulk.vue
     const tradeService = ref<{ execSearch(): void } | null>(null)
     // FiltersBlock.vue
-    const filtersBlock = ref<ComponentPublicInstance<{}, {}>>(null!)
+    const filtersComponent = ref<ComponentPublicInstance>(null!)
 
     watch(() => props.item, (item, prevItem) => {
+      const prevCurrency = (presets.value != null) ? itemFilters.value.trade.currency : undefined
+
       presets.value = createPresets(item, {
         league: leagues.selectedId.value!,
-        chaosPriceThreshold: widget.value.chaosPriceThreshold,
         collapseListings: widget.value.collapseListings,
         activateStockFilter: widget.value.activateStockFilter,
         searchStatRange: widget.value.searchStatRange,
         useEn: (AppConfig().language === 'cmn-Hant' && AppConfig().realm === 'pc-ggg'),
-        currency: (prevItem &&
+        currency: widget.value.rememberCurrency || (prevItem &&
           item.info.namespace === prevItem.info.namespace &&
-          item.info.refName === prevItem.info.refName &&
-          presets.value.presets.length === 1)
-          ? presets.value.presets[0].filters.trade.currency
-          : undefined
+          item.info.refName === prevItem.info.refName
+        ) ? prevCurrency : undefined
       })
 
       if ((!props.advancedCheck && !widget.value.smartInitialSearch) ||
@@ -176,7 +175,7 @@ export default defineComponent({
           AppConfig().language !== 'en' ||
           !leagues.selected.value!.isPopular) return false
 
-      if (presets.value.active === 'Base item') return false
+      if (presets.value.active === 'filters.preset_base_item') return false
 
       return props.item.rarity === ItemRarity.Rare &&
         props.item.category !== ItemCategory.Map &&
@@ -195,7 +194,7 @@ export default defineComponent({
     })
 
     function handleSearchMouseenter (e: MouseEvent) {
-      if ((filtersBlock.value.$el as HTMLElement).contains(e.relatedTarget as HTMLElement)) {
+      if ((filtersComponent.value.$el as HTMLElement).contains(e.relatedTarget as HTMLElement)) {
         doSearch.value = true
 
         if (document.activeElement instanceof HTMLElement) {
@@ -226,7 +225,7 @@ export default defineComponent({
       doSearch,
       tradeAPI,
       tradeService,
-      filtersBlock,
+      filtersComponent,
       showPredictedPrice,
       show,
       handleSearchMouseenter,
@@ -243,11 +242,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<i18n>
-{
-  "ru": {
-    "This tool relies on {0} and {1}, consider support them as well": "Это приложение полагается на сайт {1}, можете поддержать и его"
-  }
-}
-</i18n>

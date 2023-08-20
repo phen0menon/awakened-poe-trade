@@ -7,12 +7,11 @@ class HostTransport {
   private socket!: Sockette
   logs = shallowRef('')
   version = shallowRef('0.0.00000')
-  isPortable = shallowRef(false)
   updateInfo = shallowRef<UpdateInfo>({ state: 'initial' })
 
   async init () {
     this.onEvent('MAIN->CLIENT::log-entry', (entry) => {
-      this.logs.value += (entry.message + '\n')
+      this.logs.value += entry.message
     })
     this.onEvent('MAIN->CLIENT::updater-state', (info) => {
       this.updateInfo.value = info
@@ -55,10 +54,9 @@ class HostTransport {
   async getConfig (): Promise<string | null> {
     const response = await fetch('/config')
     const config = await response.json() as HostState
-    // TODO: 1) refactor this 2) add logs
+    // TODO: refactor this
     this.version.value = config.version
     this.updateInfo.value = config.updater
-    this.isPortable.value = config.portable
     return config.contents
   }
 

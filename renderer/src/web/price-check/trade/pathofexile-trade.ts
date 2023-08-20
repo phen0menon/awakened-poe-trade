@@ -261,10 +261,6 @@ export function createTradeRequest (filters: ItemFilters, stats: StatFilter[], i
     propSet(query.filters, 'trade_filters.filters.price.option', filters.trade.currency)
   }
 
-  if (filters.trade.chaosPriceThreshold !== 0 && filters.trade.currency !== 'divine') {
-    propSet(query.filters, 'trade_filters.filters.price.min', filters.trade.chaosPriceThreshold)
-  }
-
   if (filters.trade.collapseListings === 'api') {
     propSet(query.filters, 'trade_filters.filters.collapse.option', String(true))
   }
@@ -438,47 +434,47 @@ export function createTradeRequest (filters: ItemFilters, stats: StatFilter[], i
 
     const input = stat.roll!
     switch (stat.tradeId[0] as InternalTradeId) {
-      case 'armour.base_percentile':
+      case 'item.base_percentile':
         propSet(query.filters, 'armour_filters.filters.base_defence_percentile.min', typeof input.min === 'number' ? input.min : undefined)
         propSet(query.filters, 'armour_filters.filters.base_defence_percentile.max', typeof input.max === 'number' ? input.max : undefined)
         break
-      case 'armour.armour':
+      case 'item.armour':
         propSet(query.filters, 'armour_filters.filters.ar.min', typeof input.min === 'number' ? input.min : undefined)
         propSet(query.filters, 'armour_filters.filters.ar.max', typeof input.max === 'number' ? input.max : undefined)
         break
-      case 'armour.evasion_rating':
+      case 'item.evasion_rating':
         propSet(query.filters, 'armour_filters.filters.ev.min', typeof input.min === 'number' ? input.min : undefined)
         propSet(query.filters, 'armour_filters.filters.ev.max', typeof input.max === 'number' ? input.max : undefined)
         break
-      case 'armour.energy_shield':
+      case 'item.energy_shield':
         propSet(query.filters, 'armour_filters.filters.es.min', typeof input.min === 'number' ? input.min : undefined)
         propSet(query.filters, 'armour_filters.filters.es.max', typeof input.max === 'number' ? input.max : undefined)
         break
-      case 'armour.ward':
+      case 'item.ward':
         propSet(query.filters, 'armour_filters.filters.ward.min', typeof input.min === 'number' ? input.min : undefined)
         propSet(query.filters, 'armour_filters.filters.ward.max', typeof input.max === 'number' ? input.max : undefined)
         break
-      case 'armour.block':
+      case 'item.block':
         propSet(query.filters, 'armour_filters.filters.block.min', typeof input.min === 'number' ? input.min : undefined)
         propSet(query.filters, 'armour_filters.filters.block.max', typeof input.max === 'number' ? input.max : undefined)
         break
-      case 'weapon.total_dps':
+      case 'item.total_dps':
         propSet(query.filters, 'weapon_filters.filters.dps.min', typeof input.min === 'number' ? input.min : undefined)
         propSet(query.filters, 'weapon_filters.filters.dps.max', typeof input.max === 'number' ? input.max : undefined)
         break
-      case 'weapon.physical_dps':
+      case 'item.physical_dps':
         propSet(query.filters, 'weapon_filters.filters.pdps.min', typeof input.min === 'number' ? input.min : undefined)
         propSet(query.filters, 'weapon_filters.filters.pdps.max', typeof input.max === 'number' ? input.max : undefined)
         break
-      case 'weapon.elemental_dps':
+      case 'item.elemental_dps':
         propSet(query.filters, 'weapon_filters.filters.edps.min', typeof input.min === 'number' ? input.min : undefined)
         propSet(query.filters, 'weapon_filters.filters.edps.max', typeof input.max === 'number' ? input.max : undefined)
         break
-      case 'weapon.crit':
+      case 'item.crit':
         propSet(query.filters, 'weapon_filters.filters.crit.min', typeof input.min === 'number' ? input.min : undefined)
         propSet(query.filters, 'weapon_filters.filters.crit.max', typeof input.max === 'number' ? input.max : undefined)
         break
-      case 'weapon.aps':
+      case 'item.aps':
         propSet(query.filters, 'weapon_filters.filters.aps.min', typeof input.min === 'number' ? input.min : undefined)
         propSet(query.filters, 'weapon_filters.filters.aps.max', typeof input.max === 'number' ? input.max : undefined)
         break

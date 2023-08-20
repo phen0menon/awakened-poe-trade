@@ -9,51 +9,26 @@
   </button>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 
-export default defineComponent({
-  emits: [], // mutates filter
-  props: {
-    filter: {
-      type: Object as PropType<{ disabled: boolean }>,
-      required: true
-    },
-    text: {
-      type: String,
-      required: true
-    },
-    img: {
-      type: String,
-      default: undefined
-    },
-    readonly: {
-      type: Boolean,
-      default: false
-    },
-    active: {
-      type: Boolean,
-      default: undefined
-    },
-    collapse: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup (props) {
-    const { t } = useI18n()
-    return {
-      t,
-      toggle () {
-        const { filter, readonly } = props
-        if (!readonly) {
-          filter.disabled = !filter.disabled
-        }
-      }
-    }
+const props = defineProps<{
+  filter: { disabled: boolean } // will be mutated directly, instead of emit
+  text: string
+  img?: string
+  readonly?: boolean
+  active?: boolean
+  collapse?: boolean
+}>()
+
+const { t } = useI18n()
+
+function toggle () {
+  const { filter, readonly } = props
+  if (!readonly) {
+    filter.disabled = !filter.disabled
   }
-})
+}
 </script>
 
 <style lang="postcss" module>
@@ -70,50 +45,3 @@ export default defineComponent({
   }
 }
 </style>
-
-<i18n>
-{
-  "ru": {
-    "Unidentified": "Неопознанный",
-    "Veiled": "Завуалирован",
-    "Blighted": "Заражённая",
-    "Blight-ravaged": "Разорённая Скверной",
-    "Mirrored": "Отражено",
-    "Not Mirrored": "Не отражено",
-    "Foil Unique": "Реликвия",
-
-    "Shaper": "Создатель",
-    "Elder": "Древний",
-    "Crusader": "Крестоносец",
-    "Hunter": "Охотник",
-    "Redeemer": "Избавительница",
-    "Warlord": "Вождь",
-
-    "Superior": "Высокого к-ва",
-    "Anomalous": "Аномальный",
-    "Divergent": "Искривлённый",
-    "Phantasmal": "Фантомный"
-  },
-  "cmn-Hant": {
-    "Unidentified": "未鑑定",
-    "Veiled": "隱匿",
-    "Blighted": "凋落",
-    "Blight-ravaged": "凋落蔓延的",
-    "Mirrored": "已複製",
-    "Not Mirrored": "未複製",
-    "Foil Unique": "貼模傳奇",
-
-    "Shaper": "塑界者",
-    "Elder": "尊師",
-    "Crusader": "聖戰軍王",
-    "Hunter": "狩獵者",
-    "Redeemer": "救贖者",
-    "Warlord": "總督軍",
-
-    "Superior": "精良",
-    "Anomalous": "異常",
-    "Divergent": "相異",
-    "Phantasmal": "幻影"
-  }
-}
-</i18n>

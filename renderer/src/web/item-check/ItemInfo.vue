@@ -7,67 +7,45 @@
       <button class="btn flex-1" @click="openPoedb">poedb</button>
       <button v-if="showCoE" class="btn flex-1" @click="openCoE">CoE</button>
       <i class="fa-solid fa-ellipsis-vertical text-gray-600"></i>
-      <button class="btn flex-1 whitespace-nowrap" @click="stashSearch">{{ t('Find in Stash') }}</button>
+      <button class="btn flex-1 whitespace-nowrap" @click="stashSearch">{{ t('item.find_in_stash') }}</button>
     </div>
     <div v-if="weaponDPS" class="grid mx-auto gap-x-4 my-2" style="grid-template-columns: auto auto;">
-      <div>{{ t('Physical DPS:') }}</div><div class="text-right">{{ weaponDPS.phys }}</div>
-      <div>{{ t('Elemental DPS:') }}</div><div class="text-right">{{ weaponDPS.elem }}</div>
-      <div>{{ t('Total DPS:') }}</div><div class="text-right">{{ weaponDPS.total }}</div>
+      <div>{{ t('item.physical_dps') }}</div><div class="text-right">{{ weaponDPS.phys }}</div>
+      <div>{{ t('item.elemental_dps') }}</div><div class="text-right">{{ weaponDPS.elem }}</div>
+      <div>{{ t('item.total_dps') }}</div><div class="text-right">{{ weaponDPS.total }}</div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
+<script setup lang="ts">
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { ParsedItem } from '@/parser'
 import * as actions from './hotkeyable-actions'
 
-export default defineComponent({
-  props: {
-    item: {
-      type: Object as PropType<ParsedItem>,
-      required: true
-    }
-  },
-  setup (props) {
-    const { t } = useI18n()
+const props = defineProps<{
+  item: ParsedItem
+}>()
 
-    return {
-      t,
-      stashSearch () { actions.findSimilarItems(props.item) },
-      openWiki () { actions.openWiki(props.item) },
-      openPoedb () { actions.openPoedb(props.item) },
-      openCoE () { actions.openCoE(props.item) },
-      showCoE: computed(() => {
-        const { item } = props
-        return item.info.craftable && !item.isCorrupted && !item.isMirrored
-      }),
-      weaponDPS: computed(() => {
-        const { item } = props
-        if (!item.weaponAS) return undefined
-        const pdps = Math.round(item.weaponAS * (item.weaponPHYSICAL ?? 0))
-        const edps = Math.round(item.weaponAS * (item.weaponELEMENTAL ?? 0))
-        return { phys: pdps, elem: edps, total: pdps + edps }
-      }),
-      itemName: computed(() => props.item.info.name)
-    }
-  }
+const { t } = useI18n()
+
+function stashSearch () { actions.findSimilarItems(props.item) }
+function openWiki () { actions.openWiki(props.item) }
+function openPoedb () { actions.openPoedb(props.item) }
+function openCoE () { actions.openCoE(props.item) }
+
+const showCoE = computed(() => {
+  const { item } = props
+  return item.info.craftable && !item.isCorrupted && !item.isMirrored
 })
-</script>
 
-<i18n>
-{
-  "ru": {
-    "Physical DPS:": "Физический ДПС:",
-    "Elemental DPS:": "Стихийный ДПС:",
-    "Total DPS:": "Общий ДПС:",
-    "Find in Stash": "Найти в тайнике"
-  },
-  "cmn-Hant": {
-    "Physical DPS:": "物理 DPS: #",
-    "Elemental DPS:": "元素 DPS: #",
-    "Total DPS:": "DPS: #"
-  }
-}
-</i18n>
+const weaponDPS = computed(() => {
+  const { item } = props
+  if (!item.weaponAS) return undefined
+  const pdps = Math.round(item.weaponAS * (item.weaponPHYSICAL ?? 0))
+  const edps = Math.round(item.weaponAS * (item.weaponELEMENTAL ?? 0))
+  return { phys: pdps, elem: edps, total: pdps + edps }
+})
+
+const itemName = computed(() => props.item.info.name)
+</script>
